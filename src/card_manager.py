@@ -27,6 +27,44 @@ def _generate_card_id() -> str:
     return f"kb_{date.today().strftime('%Y%m%d')}_{_card_counter:03d}"
 
 
+def _extract_url_from_text(text: str) -> str:
+    """从文本内容中提取第一个 URL（通常是原始来源）"""
+    # 匹配 http/https URL
+    url_pattern = r'https?://[^\s<>\"\'\)\]]+'
+    matches = re.findall(url_pattern, text)
+    if matches:
+        # 返回第一个看起来像原始来源的 URL（排除常见的图片/资源 URL）
+        for url in matches:
+            # 清理 URL 末尾的标点
+            url = url.rstrip('.,;:!?)')
+            # 排除图片、CSS、JS 等资源 URL
+            if not re.search(r'\.(jpg|jpeg|png|gif|svg|css|js|ico|woff|ttf)(\?|$)', url, re.I):
+                return url
+    return ""
+
+
+def _extract_url_from_html(soup: BeautifulSoup) -> str:
+    """从 HTML 中提取原始网页 URL"""
+    # 1. 尝试 canonical URL
+    canonical = soup.find("link", rel="canonical")
+    if canonical and canonical.get("href"):
+        return canonical["href"]
+    
+    # 2. 尝试 og:url
+    og_url = soup.find("meta", property="og:url")
+    if og_url and og_url.get("content"):
+        return og_url["content"]
+    
+    # 3. 尝试 twitter:url
+    twitter_url = soup.find("meta", attrs={"name": "twitter:url"})
+    if twitter_url and twitter_url.get("content"):
+        return twitter_url["content"]
+    
+    # 4. 尝试从内容中提取第一个 URL
+    text = soup.get_text()
+    return _extract_url_from_text(text)
+
+
 def parse_article(file_path: str) -> Article:
     """
     读取 queue/ 中任意格式的文件，将完整内容传递给 LLM
@@ -38,6 +76,7 @@ def parse_article(file_path: str) -> Article:
 
     ext = path.suffix.lower()
     title = path.stem  # 文件名作为标题
+    source = ""  # 原始网页地址
 
     try:
         if ext in (".md", ".txt", ".markdown"):
@@ -46,6 +85,8 @@ def parse_article(file_path: str) -> Article:
             first_line = content.split("\n")[0].strip()
             if first_line.startswith("#"):
                 title = first_line.lstrip("#").strip()
+            # 尝试从内容中提取 URL
+            source = _extract_url_from_text(content)
         elif ext == ".html":
             html = path.read_text(encoding="utf-8")
             soup = BeautifulSoup(html, "html.parser")
@@ -53,6 +94,8 @@ def parse_article(file_path: str) -> Article:
             title_tag = soup.find("title") or soup.find("h1")
             if title_tag:
                 title = title_tag.get_text(strip=True)
+            # 提取原始 URL
+            source = _extract_url_from_html(soup)
             content = soup.get_text(separator="\n", strip=True)
         elif ext == ".pdf":
             reader = PdfReader(str(path))
@@ -61,13 +104,15 @@ def parse_article(file_path: str) -> Article:
                 content += page.extract_text() or ""
             if not content.strip():
                 title = title  # 保持文件名作为标题
+            source = _extract_url_from_text(content[:2000])
         else:
             content = path.read_text(encoding="utf-8", errors="replace")
+            source = _extract_url_from_text(content)
     except Exception as e:
         log.error(f"读取文件失败 {file_path}: {e}")
         content = ""
 
-    return Article(title=title, content=content, file_path=str(path))
+    return Article(title=title, content=content, source=source, file_path=str(path))
 
 
 # 各类型的正文模板
