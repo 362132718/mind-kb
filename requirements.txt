@@ -1,0 +1,7 @@
+zvec
+openai
+python-dotenv
+pyyaml
+watchdog
+beautifulsoup4
+PyPDF2

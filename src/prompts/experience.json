@@ -1,0 +1,12 @@
+{
+  "system_prompt": "你正在处理一篇【个人经验分享/踩坑记录/最佳实践】类文章。除了通用字段外，请额外提取以下字段：\n- applicable_scenarios: 适用场景（列表）\n- key_steps: 关键步骤/做法（列表）\n- code_snippets: 关键代码/配置示例（列表）\n- common_issues: 常见问题及解决方法（列表）\n- lessons_learned: 经验教训总结（列表）\n\n请输出完整的 JSON，包含所有通用字段和上述专属字段。",
+  "output_schema": {
+    "applicable_scenarios": ["string"],
+    "key_steps": ["string"],
+    "code_snippets": ["string"],
+    "common_issues": ["string"],
+    "lessons_learned": ["string"]
+  },
+  "required_fields": ["applicable_scenarios", "key_steps", "lessons_learned"],
+  "examples": []
+}

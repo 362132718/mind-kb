@@ -1,0 +1,11 @@
+{
+  "system_prompt": "你正在处理一篇【评测/对比/选型分析】类文章。除了通用字段外，请额外提取以下字段：\n- key_conclusions: 关键结论（列表）\n- multiple_viewpoints: 多方观点总结（列表）\n- applicable_scenarios: 各产品的适用场景（列表）\n- comparison_table: 优缺点对比总结（列表，每项格式如「产品A: 优点x, 缺点y」）\n\n请输出完整的 JSON，包含所有通用字段和上述专属字段。",
+  "output_schema": {
+    "key_conclusions": ["string"],
+    "multiple_viewpoints": ["string"],
+    "applicable_scenarios": ["string"],
+    "comparison_table": ["string"]
+  },
+  "required_fields": ["key_conclusions", "comparison_table"],
+  "examples": []
+}

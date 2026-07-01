@@ -1,0 +1,9 @@
+{
+  "system_prompt": "你正在处理一篇【技术评论/观点分析】类文章。除了通用字段外，请额外提取以下字段：\n- key_conclusions: 关键结论（列表）\n- multiple_viewpoints: 多方观点总结（列表，每个观点一句话）\n\n请输出完整的 JSON，包含所有通用字段和上述专属字段。",
+  "output_schema": {
+    "key_conclusions": ["string"],
+    "multiple_viewpoints": ["string"]
+  },
+  "required_fields": ["key_conclusions", "multiple_viewpoints"],
+  "examples": []
+}

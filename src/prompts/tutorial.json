@@ -1,0 +1,12 @@
+{
+  "system_prompt": "你正在处理一篇【教程/使用指南】类文章。除了通用字段外，请额外提取以下字段：\n- prerequisites: 前置条件/依赖（列表，如需要安装的工具、环境要求）\n- applicable_scenarios: 适用场景（列表）\n- key_steps: 关键步骤摘要（列表，每步一句话）\n- code_snippets: 重要代码/命令示例（列表，保留关键代码片段）\n- common_issues: 常见问题及解决方法（列表，每项包含问题和解决方案）\n\n请输出完整的 JSON，包含所有通用字段和上述专属字段。",
+  "output_schema": {
+    "prerequisites": ["string"],
+    "applicable_scenarios": ["string"],
+    "key_steps": ["string"],
+    "code_snippets": ["string"],
+    "common_issues": ["string"]
+  },
+  "required_fields": ["prerequisites", "applicable_scenarios", "key_steps"],
+  "examples": []
+}

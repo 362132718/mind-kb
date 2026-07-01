@@ -1,0 +1,9 @@
+{
+  "system_prompt": "你正在处理一篇【资讯/行业动态】类文章。除了通用字段外，请额外提取以下字段：\n- core_events: 核心事件描述（列表，每个事件一句话）\n- key_conclusions: 关键结论（列表）\n\n请输出完整的 JSON，包含所有通用字段和上述专属字段。",
+  "output_schema": {
+    "core_events": ["string"],
+    "key_conclusions": ["string"]
+  },
+  "required_fields": ["core_events", "key_conclusions"],
+  "examples": []
+}

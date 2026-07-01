@@ -1,0 +1,27 @@
+# 敏感信息
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# 数据目录（自动生成，不上传）
+zvec_data/
+logs/
+archive/
+
+# IDE
+.vscode/
+.idea/
+.qoder/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
