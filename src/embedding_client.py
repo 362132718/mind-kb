@@ -29,6 +29,7 @@ def get_embedding(text: str, max_retries: int = 3) -> List[float]:
             resp = client.embeddings.create(
                 model=EMBEDDING_MODEL,
                 input=text,
+                dimensions=EMBEDDING_DIM,
             )
             vector = resp.data[0].embedding
             if len(vector) != EMBEDDING_DIM:
@@ -56,6 +57,7 @@ def get_embeddings_batch(texts: List[str], max_retries: int = 3) -> List[List[fl
             resp = client.embeddings.create(
                 model=EMBEDDING_MODEL,
                 input=texts,
+                dimensions=EMBEDDING_DIM,
             )
             # 按 index 排序确保顺序正确
             sorted_data = sorted(resp.data, key=lambda x: x.index)
